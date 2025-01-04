@@ -1,11 +1,12 @@
 const request = require('supertest');
 const app = require('../../app.js');
-const { mongoConnect, mongoDisconnect } = require('../../services/mongo.js')
-
+const { mongoConnect, mongoDisconnect } = require('../../services/mongo.js');
+const { loadPlanetsData } = require('../../models/planets.model.js');
 
 describe('Launches API', () => {
     beforeAll(async ()=>{
         await mongoConnect();
+        await loadPlanetsData();
     })
 
     afterAll(async ()=>{
@@ -23,16 +24,17 @@ describe('Launches API', () => {
 
     describe('Test POST /v1/launches', () => {
         const mockLaunchData = {
-            mission: "M",
-            rocket: "R",
-            target: "T",
-            launchDate: "January 4, 2028"
+            mission: 'USS Enterprise',
+            rocket: 'NCC 1701-D',
+            target: 'Kepler-62 f',
+            launchDate: 'January 4, 2028',
         }
         const mockLaunchDataWithoutDate = {
-            mission: "M",
-            rocket: "R",
-            target: "T",
+            mission: 'USS Enterprise',
+            rocket: 'NCC 1701-D',
+            target: 'Kepler-62 f',
         }
+
         test('It should respond with 201 success', async () => {
             const response = await request(app)
                 .post('/v1/launches')
